@@ -1,4 +1,4 @@
-package com.betha.medicapp.auth.presentation.dto
+package com.betha.medicapp.patient.presentation.dto
 
 data class ScheduleRequest(
     val patientId: String,

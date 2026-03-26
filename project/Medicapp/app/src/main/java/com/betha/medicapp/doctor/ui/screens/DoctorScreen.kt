@@ -1,4 +1,4 @@
-package com.betha.medicapp.auth.ui.screens
+package com.betha.medicapp.doctor.ui.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -15,9 +15,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.betha.medicapp.auth.presentation.dto.Appointment
-import com.betha.medicapp.auth.presentation.viewmodel.DoctorEvent
-import com.betha.medicapp.auth.presentation.viewmodel.DoctorViewModel
+import com.betha.medicapp.doctor.presentation.dto.Appointment
+import com.betha.medicapp.doctor.presentation.viewmodel.DoctorEvent
+import com.betha.medicapp.doctor.presentation.viewmodel.DoctorViewModel
 import com.betha.medicapp.ui.theme.*
 
 @Composable

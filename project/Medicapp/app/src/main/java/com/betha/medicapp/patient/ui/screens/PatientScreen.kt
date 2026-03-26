@@ -1,4 +1,4 @@
-package com.betha.medicapp.auth.ui.screens
+package com.betha.medicapp.patient.ui.screens
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -18,8 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.betha.medicapp.auth.presentation.viewmodel.PatientEvent
-import com.betha.medicapp.auth.presentation.viewmodel.PatientViewModel
+import com.betha.medicapp.patient.presentation.viewmodel.PatientEvent
+import com.betha.medicapp.patient.presentation.viewmodel.PatientViewModel
 import com.betha.medicapp.auth.ui.components.PrimaryButton
 import com.betha.medicapp.ui.theme.*
 import java.util.*

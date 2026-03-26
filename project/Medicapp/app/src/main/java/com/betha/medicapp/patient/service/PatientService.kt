@@ -1,7 +1,7 @@
-package com.betha.medicapp.auth.service
+package com.betha.medicapp.patient.service
 
-import com.betha.medicapp.auth.presentation.dto.Doctor
-import com.betha.medicapp.auth.presentation.dto.ScheduleRequest
+import com.betha.medicapp.patient.presentation.dto.Doctor
+import com.betha.medicapp.patient.presentation.dto.ScheduleRequest
 import com.betha.medicapp.common.network.RESTClient
 import com.google.gson.Gson
 import com.google.gson.JsonArray

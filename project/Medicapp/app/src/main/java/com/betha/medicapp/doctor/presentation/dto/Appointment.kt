@@ -1,4 +1,4 @@
-package com.betha.medicapp.auth.presentation.dto
+package com.betha.medicapp.doctor.presentation.dto
 
 data class Appointment(
     val patientName: String,

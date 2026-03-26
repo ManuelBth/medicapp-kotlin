@@ -30,7 +30,7 @@ import com.betha.medicapp.ui.theme.*
 @Composable
 fun LoginScreen(
     onNavigateToRegister: () -> Unit,
-    onLoginSuccess: (String, Boolean, Int) -> Unit,
+    onLoginSuccess: () -> Unit,
     viewModel: AuthViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -48,8 +48,7 @@ fun LoginScreen(
 
     LaunchedEffect(uiState.isLoggedIn) {
         if (uiState.isLoggedIn && uiState.userName != null) {
-            val id = idNumber.toIntOrNull() ?: 0
-            onLoginSuccess(uiState.userName!!, uiState.doctor ?: false, id)
+            onLoginSuccess()
         }
     }
 

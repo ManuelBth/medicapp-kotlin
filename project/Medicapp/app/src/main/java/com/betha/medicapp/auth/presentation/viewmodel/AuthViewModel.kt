@@ -16,6 +16,7 @@ data class AuthUiState(
     val isLoggedIn: Boolean = false,
     val userName: String? = null,
     val doctor: Boolean? = null,
+    val idNumber: Int = 0,
     val message: String? = null,
     val isError: Boolean = false
 )
@@ -57,6 +58,7 @@ class AuthViewModel : ViewModel() {
                         isLoggedIn = response.isSuccess,
                         userName = response.userName,
                         doctor = response.doctor,
+                        idNumber = idNumber,
                         message = response.status,
                         isError = !response.isSuccess
                     )

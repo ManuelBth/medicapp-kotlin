@@ -1,9 +1,9 @@
-package com.betha.medicapp.auth.presentation.viewmodel
+package com.betha.medicapp.doctor.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.betha.medicapp.auth.presentation.dto.Appointment
-import com.betha.medicapp.auth.service.DoctorService
+import com.betha.medicapp.doctor.presentation.dto.Appointment
+import com.betha.medicapp.doctor.service.DoctorService
 import com.betha.medicapp.common.network.RESTClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

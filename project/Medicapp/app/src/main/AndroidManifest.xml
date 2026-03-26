@@ -25,6 +25,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name=".patient.PatientActivity"
+            android:exported="false"
+            android:label="Paciente"
+            android:theme="@style/Theme.Medicapp" />
+        
+        <activity
+            android:name=".doctor.DoctorActivity"
+            android:exported="false"
+            android:label="Doctor"
+            android:theme="@style/Theme.Medicapp" />
     </application>
 
 </manifest>

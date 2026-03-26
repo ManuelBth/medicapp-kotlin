@@ -1,5 +1,6 @@
 package com.betha.medicapp.ui.navigation
 
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -12,25 +13,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.betha.medicapp.auth.presentation.viewmodel.AuthEvent
 import com.betha.medicapp.auth.presentation.viewmodel.AuthViewModel
-import com.betha.medicapp.auth.ui.screens.DoctorScreen
-import com.betha.medicapp.auth.ui.screens.HomeScreen
-import com.betha.medicapp.auth.ui.screens.PatientScreen
 import com.betha.medicapp.auth.ui.screens.login.LoginScreen
 import com.betha.medicapp.auth.ui.screens.register.RegisterScreen
+import com.betha.medicapp.doctor.DoctorActivity
+import com.betha.medicapp.patient.PatientActivity
 
 sealed class Screen {
     object Login : Screen()
     object Register : Screen()
-    object Home : Screen()
-    object Patient : Screen()
-    object Doctor : Screen()
 }
 
 @Composable
 fun AppNavigation(viewModel: AuthViewModel = viewModel()) {
     var currentScreen by remember { mutableStateOf<Screen>(Screen.Login) }
-    var loggedInUser by remember { mutableStateOf<Pair<String, Boolean>?>(null) }
-    var loggedInIdNumber by remember { mutableStateOf<Int?>(null) }
     
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -43,15 +38,32 @@ fun AppNavigation(viewModel: AuthViewModel = viewModel()) {
         }
     }
 
-    when (val screen = currentScreen) {
+    // Manejar navegación tras login exitoso
+    LaunchedEffect(uiState.isLoggedIn) {
+        if (uiState.isLoggedIn && uiState.userName != null) {
+            val intent = if (uiState.doctor == true) {
+                Intent(context, DoctorActivity::class.java).apply {
+                    putExtra("doctorId", uiState.idNumber)
+                    putExtra("userName", uiState.userName)
+                }
+            } else {
+                Intent(context, PatientActivity::class.java).apply {
+                    putExtra("patientId", uiState.idNumber)
+                    putExtra("userName", uiState.userName)
+                }
+            }
+            context.startActivity(intent)
+            // Resetear estado
+            viewModel.onEvent(AuthEvent.ClearMessage)
+        }
+    }
+
+    when (currentScreen) {
         is Screen.Login -> {
             LoginScreen(
                 onNavigateToRegister = { currentScreen = Screen.Register },
-                onLoginSuccess = { userName, doctor, idNumber ->
-                    loggedInUser = Pair(userName, doctor)
-                    loggedInIdNumber = idNumber
-                    // Redirigir según tipo de usuario
-                    currentScreen = if (doctor) Screen.Doctor else Screen.Patient
+                onLoginSuccess = { 
+                    // La navegación se maneja en el LaunchedEffect de arriba
                 },
                 viewModel = viewModel
             )
@@ -62,55 +74,6 @@ fun AppNavigation(viewModel: AuthViewModel = viewModel()) {
                 onRegisterSuccess = { currentScreen = Screen.Login },
                 viewModel = viewModel
             )
-        }
-        is Screen.Home -> {
-            loggedInUser?.let { userData ->
-                HomeScreen(
-                    userName = userData.first,
-                    doctor = userData.second,
-                    onLogout = {
-                        loggedInIdNumber?.let { idNumber ->
-                            viewModel.onEvent(AuthEvent.Logout(idNumber))
-                        }
-                        loggedInUser = null
-                        loggedInIdNumber = null
-                        currentScreen = Screen.Login
-                    },
-                    onUserIdChange = { id -> loggedInIdNumber = id }
-                )
-            }
-        }
-        is Screen.Patient -> {
-            loggedInUser?.let { userData ->
-                PatientScreen(
-                    patientId = loggedInIdNumber ?: 0,
-                    userName = userData.first,
-                    onLogout = {
-                        loggedInIdNumber?.let { idNumber ->
-                            viewModel.onEvent(AuthEvent.Logout(idNumber))
-                        }
-                        loggedInUser = null
-                        loggedInIdNumber = null
-                        currentScreen = Screen.Login
-                    }
-                )
-            }
-        }
-        is Screen.Doctor -> {
-            loggedInUser?.let { userData ->
-                DoctorScreen(
-                    doctorId = loggedInIdNumber ?: 0,
-                    userName = userData.first,
-                    onLogout = {
-                        loggedInIdNumber?.let { idNumber ->
-                            viewModel.onEvent(AuthEvent.Logout(idNumber))
-                        }
-                        loggedInUser = null
-                        loggedInIdNumber = null
-                        currentScreen = Screen.Login
-                    }
-                )
-            }
         }
     }
 }
