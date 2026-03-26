@@ -30,30 +30,37 @@ fun AppNavigation(viewModel: AuthViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
-    // Mostrar Toast cuando hay mensaje del servidor
-    LaunchedEffect(uiState.message) {
-        if (uiState.message != null) {
-            Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
-            viewModel.onEvent(AuthEvent.ClearMessage)
-        }
-    }
-
-    // Manejar navegación tras login exitoso
+    // Manejar navegación tras login exitoso - PRIMERO (antes de ClearMessage)
     LaunchedEffect(uiState.isLoggedIn) {
         if (uiState.isLoggedIn && uiState.userName != null) {
-            val intent = if (uiState.doctor == true) {
+            // Guardar datos antes de limpiar
+            val isDoctor = uiState.doctor == true
+            val idNumber = uiState.idNumber
+            val userName = uiState.userName
+            
+            // Limpiar estado PRIMERO
+            viewModel.onEvent(AuthEvent.ClearMessage)
+            
+            // Luego navegar
+            val intent = if (isDoctor) {
                 Intent(context, DoctorActivity::class.java).apply {
-                    putExtra("doctorId", uiState.idNumber)
-                    putExtra("userName", uiState.userName)
+                    putExtra("doctorId", idNumber)
+                    putExtra("userName", userName)
                 }
             } else {
                 Intent(context, PatientActivity::class.java).apply {
-                    putExtra("patientId", uiState.idNumber)
-                    putExtra("userName", uiState.userName)
+                    putExtra("patientId", idNumber)
+                    putExtra("userName", userName)
                 }
             }
             context.startActivity(intent)
-            // Resetear estado
+        }
+    }
+
+    // Mostrar Toast cuando hay mensaje del servidor - DESPUÉS
+    LaunchedEffect(uiState.message) {
+        if (uiState.message != null) {
+            Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
             viewModel.onEvent(AuthEvent.ClearMessage)
         }
     }
