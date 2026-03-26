@@ -26,12 +26,12 @@ class AuthService(private val client: RESTClient) {
             val json = gson.fromJson(response, JsonObject::class.java)
             val status = json.get("status")?.asString ?: ""
             
-            // El login es exitoso si el status no está vacío
-            val isSuccess = status.isNotEmpty()
+            // El login es exitoso SI el status es "Doctor logged in" o "Patient logged in"
+            // Si es "Invalid credentials" o cualquier otra cosa, no es exitoso
+            val isSuccess = status == "Doctor logged in" || status == "Patient logged in"
             
             // Detectar si es doctor basándose en el texto del status
-            // Servidor responde: "Doctor logged in" o "Patient logged in"
-            val doctor = status.contains("Doctor", ignoreCase = true)
+            val doctor = status.startsWith("Doctor", ignoreCase = true)
             
             // Extraer userName si está disponible, si no usar un valor por defecto
             val userName = json.get("userName")?.asString ?: "Usuario"
