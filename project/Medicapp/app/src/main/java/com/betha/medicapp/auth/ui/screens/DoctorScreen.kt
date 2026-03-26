@@ -10,8 +10,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -32,12 +30,10 @@ fun DoctorScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
-    // Cargar citas al iniciar
     LaunchedEffect(doctorId) {
         viewModel.onEvent(DoctorEvent.LoadAppointments(doctorId))
     }
 
-    // Mostrar Toast cuando hay mensaje
     LaunchedEffect(uiState.message) {
         if (uiState.message != null) {
             Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
@@ -45,86 +41,56 @@ fun DoctorScreen(
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(BlueGradientStart, BlueGradientEnd)
-                )
-            )
-    ) {
+    Box(modifier = Modifier.fillMaxSize().background(Background)) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
+            modifier = Modifier.fillMaxSize().padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
-                text = "Área del Médico",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = White
-            )
+            // Header azul
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        brush = androidx.compose.ui.graphics.Brush.verticalGradient(colors = listOf(PrimaryDark, Primary)),
+                        shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
+                    )
+                    .padding(vertical = 24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(text = "Área del Médico", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = OnPrimary)
+                    Text(text = "Dr. $userName", fontSize = 14.sp, color = OnPrimary.copy(alpha = 0.8f), modifier = Modifier.padding(top = 4.dp))
+                }
+            }
 
-            Text(
-                text = "Dr. $userName",
-                fontSize = 16.sp,
-                color = White.copy(alpha = 0.8f),
-                modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
-            )
+            Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
-                text = "Citas Pendientes",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = White,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
+            Text(text = "Citas Pendientes", fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = OnSurface, modifier = Modifier.padding(bottom = 16.dp))
 
             if (uiState.isLoading) {
-                CircularProgressIndicator(color = White)
+                CircularProgressIndicator(color = Primary)
             } else if (uiState.appointments.isEmpty()) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            color = White.copy(alpha = 0.1f),
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                        .padding(32.dp),
+                    modifier = Modifier.fillMaxWidth().background(Surface, shape = RoundedCornerShape(16.dp)).padding(32.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "No hay citas programadas",
-                        color = White.copy(alpha = 0.7f),
-                        fontSize = 16.sp
-                    )
+                    Text(text = "No hay citas programadas", color = TextSecondary, fontSize = 16.sp)
                 }
             } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(uiState.appointments) { appointment ->
-                        AppointmentCard(appointment = appointment)
-                    }
+                LazyColumn(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    items(uiState.appointments) { appointment -> AppointmentCard(appointment = appointment) }
                 }
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
             TextButton(onClick = onLogout) {
-                Text(
-                    text = "Cerrar Sesión",
-                    color = White,
-                    fontSize = 14.sp
-                )
+                Text(text = "Cerrar Sesión", color = Primary, fontSize = 14.sp)
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -134,35 +100,16 @@ fun AppointmentCard(appointment: Appointment) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(
-                color = White.copy(alpha = 0.15f),
-                shape = RoundedCornerShape(16.dp)
-            )
+            .background(color = Surface, shape = RoundedCornerShape(16.dp))
             .padding(16.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Column {
-                Text(
-                    text = appointment.patientName,
-                    color = White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Text(text = appointment.patientName, color = OnSurface, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "${appointment.date} - ${appointment.time}",
-                    color = White.copy(alpha = 0.7f),
-                    fontSize = 14.sp
-                )
+                Text(text = "${appointment.date} - ${appointment.time}", color = TextSecondary, fontSize = 14.sp)
             }
-            Text(
-                text = "📅",
-                fontSize = 24.sp
-            )
+            Text(text = "📅", fontSize = 24.sp)
         }
     }
 }

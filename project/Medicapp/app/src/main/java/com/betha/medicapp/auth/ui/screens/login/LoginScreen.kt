@@ -14,7 +14,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -26,10 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.betha.medicapp.auth.presentation.viewmodel.AuthEvent
 import com.betha.medicapp.auth.presentation.viewmodel.AuthViewModel
 import com.betha.medicapp.auth.ui.components.PrimaryButton
-import com.betha.medicapp.ui.theme.GreenEssenza
-import com.betha.medicapp.ui.theme.GreenGradientEnd
-import com.betha.medicapp.ui.theme.GreenGradientStart
-import com.betha.medicapp.ui.theme.White
+import com.betha.medicapp.ui.theme.*
 
 @Composable
 fun LoginScreen(
@@ -60,11 +56,7 @@ fun LoginScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(GreenGradientStart, GreenGradientEnd)
-                )
-            )
+            .background(Background)
     ) {
         Column(
             modifier = Modifier
@@ -74,27 +66,45 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
-            Text(
-                text = "MedicApp",
-                fontSize = 42.sp,
-                fontWeight = FontWeight.Bold,
-                color = White
-            )
-
-            Text(
-                text = "Bienvenido de nuevo",
-                fontSize = 16.sp,
-                color = White.copy(alpha = 0.8f),
-                modifier = Modifier.padding(top = 8.dp, bottom = 40.dp)
-            )
-
+            // Header con gradiente azul
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        color = White.copy(alpha = 0.1f),
+                        brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                            colors = listOf(PrimaryDark, Primary)
+                        ),
+                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
+                    )
+                    .padding(vertical = 40.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "MedicApp",
+                        fontSize = 36.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = OnPrimary
+                    )
+                    Text(
+                        text = "Bienvenido de nuevo",
+                        fontSize = 14.sp,
+                        color = OnPrimary.copy(alpha = 0.8f),
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            // Card blanco con sombra
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = Surface,
                         shape = RoundedCornerShape(24.dp)
                     )
                     .padding(24.dp)
@@ -102,9 +112,9 @@ fun LoginScreen(
                 Column {
                     Text(
                         text = "Iniciar Sesión",
-                        fontSize = 24.sp,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = White,
+                        color = OnSurface,
                         modifier = Modifier.padding(bottom = 24.dp)
                     )
 
@@ -114,17 +124,17 @@ fun LoginScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
-                        placeholder = { Text("Número de Identificación", color = Color.Gray) },
+                        placeholder = { Text("Número de Identificación", color = TextSecondary) },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         colors = TextFieldDefaults.colors(
-                            focusedIndicatorColor = GreenEssenza,
-                            unfocusedIndicatorColor = GreenEssenza.copy(alpha = 0.5f),
-                            cursorColor = GreenEssenza,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White
+                            focusedIndicatorColor = Primary,
+                            unfocusedIndicatorColor = TextSecondary,
+                            cursorColor = Primary,
+                            focusedTextColor = OnSurface,
+                            unfocusedTextColor = OnSurface,
+                            focusedContainerColor = SurfaceVariant,
+                            unfocusedContainerColor = SurfaceVariant
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -135,20 +145,22 @@ fun LoginScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
-                        placeholder = { Text("Contraseña", color = Color.Gray) },
+                        placeholder = { Text("Contraseña", color = TextSecondary) },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         colors = TextFieldDefaults.colors(
-                            focusedIndicatorColor = GreenEssenza,
-                            unfocusedIndicatorColor = GreenEssenza.copy(alpha = 0.5f),
-                            cursorColor = GreenEssenza,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White
+                            focusedIndicatorColor = Primary,
+                            unfocusedIndicatorColor = TextSecondary,
+                            cursorColor = Primary,
+                            focusedTextColor = OnSurface,
+                            unfocusedTextColor = OnSurface,
+                            focusedContainerColor = SurfaceVariant,
+                            unfocusedContainerColor = SurfaceVariant
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     PrimaryButton(
                         text = "Iniciar Sesión",
@@ -171,12 +183,12 @@ fun LoginScreen(
             TextButton(onClick = onNavigateToRegister) {
                 Text(
                     text = "¿No tienes cuenta? Regístrate",
-                    color = White,
+                    color = Primary,
                     fontSize = 14.sp
                 )
             }
 
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(modifier = Modifier.height(40.dp))
         }
     }
 }

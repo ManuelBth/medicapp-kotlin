@@ -2,20 +2,39 @@ package com.betha.medicapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val BlueEssenza = Color(0xFF1976D2)
-val BlueEssenzaLight = Color(0xFF42A5F5)
-val BlueEssenzaDark = Color(0xFF0D47A1)
-val BlueGradientStart = Color(0xFF0D47A1)
-val BlueGradientEnd = Color(0xFF1976D2)
+// Colores principales
+val Primary = Color(0xFF1565C0)        // Azul principal
+val PrimaryLight = Color(0xFF5E92F3)    // Azul claro
+val PrimaryDark = Color(0xFF003C8F)     // Azul oscuro
 
-val White = Color(0xFFFFFFFF)
-val LightGray = Color(0xFFF5F5F5)
-val DarkGray = Color(0xFF333333)
-val ErrorRed = Color(0xFFD32F2F)
+// Fondos - blancos y pasteles
+val Background = Color(0xFFFAFAFA)      // Blanco casi puro
+val Surface = Color(0xFFFFFFFF)         // Blanco
+val SurfaceVariant = Color(0xFFF5F7FA)  // Azul muy pastel (gris azulado)
 
-// Alias para compatibilidad
-val GreenEssenza = BlueEssenza
-val GreenEssenzaLight = BlueEssenzaLight
-val GreenEssenzaDark = BlueEssenzaDark
-val GreenGradientStart = BlueGradientStart
-val GreenGradientEnd = BlueGradientEnd
+// Texto
+val OnPrimary = Color(0xFFFFFFFF)       // Texto sobre azul
+val OnBackground = Color(0xFF1A1A1A)    // Negro suave
+val OnSurface = Color(0xFF333333)       // Gris oscuro
+val TextSecondary = Color(0xFF757575)   // Gris medio
+
+// Estados
+val Error = Color(0xFFD32F2F)
+val Success = Color(0xFF388E3C)
+
+// Alias para compatibilidad con código existente
+val BlueEssenza = Primary
+val BlueEssenzaLight = PrimaryLight
+val BlueEssenzaDark = PrimaryDark
+val BlueGradientStart = PrimaryDark
+val BlueGradientEnd = Primary
+val GreenEssenza = Primary
+val GreenEssenzaLight = PrimaryLight
+val GreenEssenzaDark = PrimaryDark
+val GreenGradientStart = PrimaryDark
+val GreenGradientEnd = Primary
+
+val White = Surface
+val LightGray = SurfaceVariant
+val DarkGray = OnSurface
+val ErrorRed = Error

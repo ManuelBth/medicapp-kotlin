@@ -16,8 +16,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -28,10 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.betha.medicapp.auth.presentation.viewmodel.AuthEvent
 import com.betha.medicapp.auth.presentation.viewmodel.AuthViewModel
 import com.betha.medicapp.auth.ui.components.PrimaryButton
-import com.betha.medicapp.ui.theme.GreenEssenza
-import com.betha.medicapp.ui.theme.GreenGradientEnd
-import com.betha.medicapp.ui.theme.GreenGradientStart
-import com.betha.medicapp.ui.theme.White
+import com.betha.medicapp.ui.theme.*
 
 @Composable
 fun RegisterScreen(
@@ -52,7 +47,6 @@ fun RegisterScreen(
         if (uiState.message != null) {
             Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
             viewModel.onEvent(AuthEvent.ClearMessage)
-            // Solo navegar si no hay error (éxito en registro)
             if (!uiState.isError) {
                 onRegisterSuccess()
             }
@@ -62,41 +56,54 @@ fun RegisterScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(GreenGradientStart, GreenGradientEnd)
-                )
-            )
+            .background(Background)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            Text(
-                text = "MedicApp",
-                fontSize = 36.sp,
-                fontWeight = FontWeight.Bold,
-                color = White
-            )
-
-            Text(
-                text = "Crea tu cuenta",
-                fontSize = 16.sp,
-                color = White.copy(alpha = 0.8f),
-                modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
-            )
-
+            // Header con gradiente azul
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        color = White.copy(alpha = 0.1f),
+                        brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                            colors = listOf(PrimaryDark, Primary)
+                        ),
+                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
+                    )
+                    .padding(vertical = 32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "MedicApp",
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = OnPrimary
+                    )
+                    Text(
+                        text = "Crea tu cuenta",
+                        fontSize = 14.sp,
+                        color = OnPrimary.copy(alpha = 0.8f),
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Card blanco
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = Surface,
                         shape = RoundedCornerShape(24.dp)
                     )
                     .padding(24.dp)
@@ -104,29 +111,27 @@ fun RegisterScreen(
                 Column {
                     Text(
                         text = "Registrarse",
-                        fontSize = 24.sp,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = White,
+                        color = OnSurface,
                         modifier = Modifier.padding(bottom = 24.dp)
                     )
 
                     TextField(
                         value = idNumber,
                         onValueChange = { idNumber = it.filter { c -> c.isDigit() } },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        placeholder = { Text("Número de Identificación", color = Color.Gray) },
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                        placeholder = { Text("Número de Identificación", color = TextSecondary) },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         colors = TextFieldDefaults.colors(
-                            focusedIndicatorColor = GreenEssenza,
-                            unfocusedIndicatorColor = GreenEssenza.copy(alpha = 0.5f),
-                            cursorColor = GreenEssenza,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White
+                            focusedIndicatorColor = Primary,
+                            unfocusedIndicatorColor = TextSecondary,
+                            cursorColor = Primary,
+                            focusedTextColor = OnSurface,
+                            unfocusedTextColor = OnSurface,
+                            focusedContainerColor = SurfaceVariant,
+                            unfocusedContainerColor = SurfaceVariant
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -134,19 +139,17 @@ fun RegisterScreen(
                     TextField(
                         value = userName,
                         onValueChange = { userName = it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        placeholder = { Text("Nombre de Usuario", color = Color.Gray) },
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                        placeholder = { Text("Nombre de Usuario", color = TextSecondary) },
                         singleLine = true,
                         colors = TextFieldDefaults.colors(
-                            focusedIndicatorColor = GreenEssenza,
-                            unfocusedIndicatorColor = GreenEssenza.copy(alpha = 0.5f),
-                            cursorColor = GreenEssenza,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White
+                            focusedIndicatorColor = Primary,
+                            unfocusedIndicatorColor = TextSecondary,
+                            cursorColor = Primary,
+                            focusedTextColor = OnSurface,
+                            unfocusedTextColor = OnSurface,
+                            focusedContainerColor = SurfaceVariant,
+                            unfocusedContainerColor = SurfaceVariant
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -154,20 +157,18 @@ fun RegisterScreen(
                     TextField(
                         value = password,
                         onValueChange = { password = it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        placeholder = { Text("Contraseña", color = Color.Gray) },
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                        placeholder = { Text("Contraseña", color = TextSecondary) },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         colors = TextFieldDefaults.colors(
-                            focusedIndicatorColor = GreenEssenza,
-                            unfocusedIndicatorColor = GreenEssenza.copy(alpha = 0.5f),
-                            cursorColor = GreenEssenza,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White
+                            focusedIndicatorColor = Primary,
+                            unfocusedIndicatorColor = TextSecondary,
+                            cursorColor = Primary,
+                            focusedTextColor = OnSurface,
+                            unfocusedTextColor = OnSurface,
+                            focusedContainerColor = SurfaceVariant,
+                            unfocusedContainerColor = SurfaceVariant
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -175,67 +176,50 @@ fun RegisterScreen(
                     TextField(
                         value = confirmPassword,
                         onValueChange = { confirmPassword = it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        placeholder = { Text("Confirmar Contraseña", color = Color.Gray) },
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                        placeholder = { Text("Confirmar Contraseña", color = TextSecondary) },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         colors = TextFieldDefaults.colors(
-                            focusedIndicatorColor = GreenEssenza,
-                            unfocusedIndicatorColor = GreenEssenza.copy(alpha = 0.5f),
-                            cursorColor = GreenEssenza,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White
+                            focusedIndicatorColor = Primary,
+                            unfocusedIndicatorColor = TextSecondary,
+                            cursorColor = Primary,
+                            focusedTextColor = OnSurface,
+                            unfocusedTextColor = OnSurface,
+                            focusedContainerColor = SurfaceVariant,
+                            unfocusedContainerColor = SurfaceVariant
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
 
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 12.dp),
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Checkbox(
                             checked = isDoctor,
                             onCheckedChange = { isDoctor = it },
                             colors = CheckboxDefaults.colors(
-                                checkedColor = GreenEssenza,
-                                uncheckedColor = White.copy(alpha = 0.7f),
-                                checkmarkColor = White
+                                checkedColor = Primary,
+                                uncheckedColor = TextSecondary,
+                                checkmarkColor = OnPrimary
                             )
                         )
-                        Text(
-                            text = "Eres médico",
-                            color = White,
-                            fontSize = 14.sp,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
+                        Text(text = "Eres médico", color = OnSurface, fontSize = 14.sp, modifier = Modifier.padding(start = 8.dp))
                     }
+
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     PrimaryButton(
                         text = "Registrarse",
                         onClick = {
                             val id = idNumber.toIntOrNull()
                             when {
-                                id == null -> {
-                                    Toast.makeText(context, "Ingrese un ID válido", Toast.LENGTH_SHORT).show()
-                                }
-                                userName.isBlank() -> {
-                                    Toast.makeText(context, "Ingrese un nombre de usuario", Toast.LENGTH_SHORT).show()
-                                }
-                                password.length < 4 -> {
-                                    Toast.makeText(context, "La contraseña debe tener al menos 4 caracteres", Toast.LENGTH_SHORT).show()
-                                }
-                                password != confirmPassword -> {
-                                    Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
-                                }
-                                else -> {
-                                    viewModel.onEvent(AuthEvent.Register(id, userName, isDoctor, password))
-                                }
+                                id == null -> Toast.makeText(context, "Ingrese un ID válido", Toast.LENGTH_SHORT).show()
+                                userName.isBlank() -> Toast.makeText(context, "Ingrese un nombre de usuario", Toast.LENGTH_SHORT).show()
+                                password.length < 4 -> Toast.makeText(context, "La contraseña debe tener al menos 4 caracteres", Toast.LENGTH_SHORT).show()
+                                password != confirmPassword -> Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
+                                else -> viewModel.onEvent(AuthEvent.Register(id, userName, isDoctor, password))
                             }
                         },
                         isLoading = uiState.isLoading,
@@ -244,17 +228,13 @@ fun RegisterScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             TextButton(onClick = onNavigateToLogin) {
-                Text(
-                    text = "¿Ya tienes cuenta? Inicia sesión",
-                    color = White,
-                    fontSize = 14.sp
-                )
+                Text(text = "¿Ya tienes cuenta? Inicia sesión", color = Primary, fontSize = 14.sp)
             }
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
