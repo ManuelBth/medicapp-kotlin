@@ -12,7 +12,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.betha.medicapp.auth.presentation.viewmodel.AuthEvent
 import com.betha.medicapp.auth.presentation.viewmodel.AuthViewModel
+import com.betha.medicapp.auth.ui.screens.DoctorScreen
 import com.betha.medicapp.auth.ui.screens.HomeScreen
+import com.betha.medicapp.auth.ui.screens.PatientScreen
 import com.betha.medicapp.auth.ui.screens.login.LoginScreen
 import com.betha.medicapp.auth.ui.screens.register.RegisterScreen
 
@@ -20,6 +22,8 @@ sealed class Screen {
     object Login : Screen()
     object Register : Screen()
     object Home : Screen()
+    object Patient : Screen()
+    object Doctor : Screen()
 }
 
 @Composable
@@ -46,7 +50,8 @@ fun AppNavigation(viewModel: AuthViewModel = viewModel()) {
                 onLoginSuccess = { userName, doctor, idNumber ->
                     loggedInUser = Pair(userName, doctor)
                     loggedInIdNumber = idNumber
-                    currentScreen = Screen.Home
+                    // Redirigir según tipo de usuario
+                    currentScreen = if (doctor) Screen.Doctor else Screen.Patient
                 },
                 viewModel = viewModel
             )
@@ -64,16 +69,46 @@ fun AppNavigation(viewModel: AuthViewModel = viewModel()) {
                     userName = userData.first,
                     doctor = userData.second,
                     onLogout = {
-                        // Llamar al ViewModel para logout en el servidor
                         loggedInIdNumber?.let { idNumber ->
                             viewModel.onEvent(AuthEvent.Logout(idNumber))
                         }
-                        // Limpiar estado local inmediatamente (el Toast se mostrará arriba)
                         loggedInUser = null
                         loggedInIdNumber = null
                         currentScreen = Screen.Login
                     },
                     onUserIdChange = { id -> loggedInIdNumber = id }
+                )
+            }
+        }
+        is Screen.Patient -> {
+            loggedInUser?.let { userData ->
+                PatientScreen(
+                    patientId = loggedInIdNumber ?: 0,
+                    userName = userData.first,
+                    onLogout = {
+                        loggedInIdNumber?.let { idNumber ->
+                            viewModel.onEvent(AuthEvent.Logout(idNumber))
+                        }
+                        loggedInUser = null
+                        loggedInIdNumber = null
+                        currentScreen = Screen.Login
+                    }
+                )
+            }
+        }
+        is Screen.Doctor -> {
+            loggedInUser?.let { userData ->
+                DoctorScreen(
+                    doctorId = loggedInIdNumber ?: 0,
+                    userName = userData.first,
+                    onLogout = {
+                        loggedInIdNumber?.let { idNumber ->
+                            viewModel.onEvent(AuthEvent.Logout(idNumber))
+                        }
+                        loggedInUser = null
+                        loggedInIdNumber = null
+                        currentScreen = Screen.Login
+                    }
                 )
             }
         }
