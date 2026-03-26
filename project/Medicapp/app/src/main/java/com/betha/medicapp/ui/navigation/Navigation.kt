@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.betha.medicapp.auth.presentation.viewmodel.AuthEvent
 import com.betha.medicapp.auth.presentation.viewmodel.AuthViewModel
+import com.betha.medicapp.auth.service.SessionManager
 import com.betha.medicapp.auth.ui.screens.login.LoginScreen
 import com.betha.medicapp.auth.ui.screens.register.RegisterScreen
 import com.betha.medicapp.doctor.DoctorActivity
@@ -26,9 +27,26 @@ sealed class Screen {
 @Composable
 fun AppNavigation(viewModel: AuthViewModel = viewModel()) {
     var currentScreen by remember { mutableStateOf<Screen>(Screen.Login) }
+    val context = LocalContext.current
+    
+    // Inicializar SessionManager
+    val sessionManager = remember { SessionManager(context) }
+    
+    // Cargar sesión persistida al iniciar
+    LaunchedEffect(Unit) {
+        viewModel.setSessionManager(sessionManager)
+        
+        if (sessionManager.isLoggedIn()) {
+            // Cargar datos de sesión en el ViewModel
+            val idNumber = sessionManager.getIdNumber()
+            val userName = sessionManager.getUserName()
+            val isDoctor = sessionManager.isDoctor()
+            
+            viewModel.loadSession(idNumber, userName, isDoctor)
+        }
+    }
     
     val uiState by viewModel.uiState.collectAsState()
-    val context = LocalContext.current
 
     // Mostrar Toast cuando hay mensaje
     LaunchedEffect(uiState.message) {

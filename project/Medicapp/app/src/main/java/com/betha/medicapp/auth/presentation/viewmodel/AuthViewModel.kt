@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.betha.medicapp.auth.presentation.dto.LoginRequest
 import com.betha.medicapp.auth.presentation.dto.RegisterRequest
 import com.betha.medicapp.auth.service.AuthService
+import com.betha.medicapp.auth.service.SessionManager
 import com.betha.medicapp.common.network.RESTClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,9 +33,25 @@ class AuthViewModel : ViewModel() {
 
     private val client = RESTClient("http://192.168.80.22:8080")
     private val authService = AuthService(client)
+    private var sessionManager: SessionManager? = null
 
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
+
+    fun setSessionManager(manager: SessionManager) {
+        this.sessionManager = manager
+    }
+
+    fun getSessionManager(): SessionManager? = sessionManager
+
+    fun loadSession(idNumber: Int, userName: String, isDoctor: Boolean) {
+        _uiState.value = _uiState.value.copy(
+            isLoggedIn = true,
+            userName = userName,
+            doctor = isDoctor,
+            idNumber = idNumber
+        )
+    }
 
     fun onEvent(event: AuthEvent) {
         when (event) {
@@ -62,6 +79,15 @@ class AuthViewModel : ViewModel() {
                         message = response.status,
                         isError = !response.isSuccess
                     )
+
+                    // Guardar sesión en SharedPreferences si el login fue exitoso
+                    if (response.isSuccess) {
+                        sessionManager?.saveSession(
+                            idNumber = idNumber,
+                            userName = response.userName ?: "Usuario",
+                            isDoctor = response.doctor ?: false
+                        )
+                    }
                 },
                 onFailure = { error ->
                     _uiState.value = _uiState.value.copy(
@@ -107,6 +133,8 @@ class AuthViewModel : ViewModel() {
 
             result.fold(
                 onSuccess = { _ ->
+                    // Limpiar sesión de SharedPreferences
+                    sessionManager?.clearSession()
                     // Resetear completamente el estado
                     _uiState.value = AuthUiState()
                 },
