@@ -53,7 +53,7 @@ fun LoginScreen(
     LaunchedEffect(uiState.isLoggedIn) {
         if (uiState.isLoggedIn && uiState.userName != null) {
             val id = idNumber.toIntOrNull() ?: 0
-            onLoginSuccess(uiState.userName!!, uiState.isDoctor ?: false, id)
+            onLoginSuccess(uiState.userName!!, uiState.doctor ?: false, id)
         }
     }
 

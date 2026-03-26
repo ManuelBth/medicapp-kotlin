@@ -20,7 +20,7 @@ import com.betha.medicapp.ui.theme.White
 @Composable
 fun HomeScreen(
     userName: String,
-    isDoctor: Boolean,
+    doctor: Boolean,
     onLogout: () -> Unit,
     onUserIdChange: (Int) -> Unit = {}
 ) {
@@ -58,7 +58,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = if (isDoctor) "Médico" else "Paciente",
+                text = if (doctor) "Médico" else "Paciente",
                 fontSize = 18.sp,
                 color = GreenEssenza
             )

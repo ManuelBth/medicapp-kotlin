@@ -29,13 +29,13 @@ class AuthService(private val client: RESTClient) {
             // El login es exitoso si el status no está vacío
             val isSuccess = status.isNotEmpty()
             
-            // Determinar si es doctor basándose en el status
-            val isDoctor = status.contains("Doctor", ignoreCase = true)
+            // Usar el campo "doctor" del JSON directamente
+            val doctor = json.get("doctor")?.asBoolean ?: false
             
             // Extraer userName si está disponible, si no usar un valor por defecto
             val userName = json.get("userName")?.asString ?: "Usuario"
 
-            Result.success(AuthResponse(status, isSuccess, userName, isDoctor))
+            Result.success(AuthResponse(status, isSuccess, userName, doctor))
         } catch (e: Exception) {
             Result.failure(e)
         }

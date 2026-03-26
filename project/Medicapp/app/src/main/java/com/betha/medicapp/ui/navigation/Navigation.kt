@@ -43,8 +43,8 @@ fun AppNavigation(viewModel: AuthViewModel = viewModel()) {
         is Screen.Login -> {
             LoginScreen(
                 onNavigateToRegister = { currentScreen = Screen.Register },
-                onLoginSuccess = { userName, isDoctor, idNumber ->
-                    loggedInUser = Pair(userName, isDoctor)
+                onLoginSuccess = { userName, doctor, idNumber ->
+                    loggedInUser = Pair(userName, doctor)
                     loggedInIdNumber = idNumber
                     currentScreen = Screen.Home
                 },
@@ -62,7 +62,7 @@ fun AppNavigation(viewModel: AuthViewModel = viewModel()) {
             loggedInUser?.let { userData ->
                 HomeScreen(
                     userName = userData.first,
-                    isDoctor = userData.second,
+                    doctor = userData.second,
                     onLogout = {
                         // Llamar al ViewModel para logout en el servidor
                         loggedInIdNumber?.let { idNumber ->
