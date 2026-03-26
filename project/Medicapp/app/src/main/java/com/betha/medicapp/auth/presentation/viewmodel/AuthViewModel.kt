@@ -106,15 +106,12 @@ class AuthViewModel : ViewModel() {
             val result = authService.logout(idNumber)
 
             result.fold(
-                onSuccess = { response ->
-                    _uiState.value = AuthUiState(
-                        message = response.status,
-                        isError = !response.isSuccess
-                    )
+                onSuccess = { _ ->
+                    // Resetear completamente el estado
+                    _uiState.value = AuthUiState()
                 },
                 onFailure = { error ->
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
+                    _uiState.value = AuthUiState(
                         message = error.message ?: "Error de conexión",
                         isError = true
                     )

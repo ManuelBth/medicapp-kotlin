@@ -1,5 +1,6 @@
 package com.betha.medicapp.auth.ui.screens.login
 
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,12 +26,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.betha.medicapp.auth.presentation.viewmodel.AuthEvent
 import com.betha.medicapp.auth.presentation.viewmodel.AuthViewModel
 import com.betha.medicapp.auth.ui.components.PrimaryButton
+import com.betha.medicapp.doctor.DoctorActivity
+import com.betha.medicapp.patient.PatientActivity
 import com.betha.medicapp.ui.theme.*
 
 @Composable
 fun LoginScreen(
     onNavigateToRegister: () -> Unit,
-    onLoginSuccess: () -> Unit,
     viewModel: AuthViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -39,6 +41,7 @@ fun LoginScreen(
     var idNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
+    // Mostrar Toast cuando hay mensaje
     LaunchedEffect(uiState.message) {
         if (uiState.message != null) {
             Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
@@ -46,9 +49,25 @@ fun LoginScreen(
         }
     }
 
-    LaunchedEffect(uiState.isLoggedIn) {
+    // Navegar cuando el login es exitoso
+    LaunchedEffect(uiState.isLoggedIn, uiState.doctor) {
         if (uiState.isLoggedIn && uiState.userName != null) {
-            onLoginSuccess()
+            val isDoctor = uiState.doctor == true
+            val userId = uiState.idNumber
+            val userName = uiState.userName ?: ""
+            
+            val intent = if (isDoctor) {
+                Intent(context, DoctorActivity::class.java).apply {
+                    putExtra("doctorId", userId)
+                    putExtra("userName", userName)
+                }
+            } else {
+                Intent(context, PatientActivity::class.java).apply {
+                    putExtra("patientId", userId)
+                    putExtra("userName", userName)
+                }
+            }
+            context.startActivity(intent)
         }
     }
 

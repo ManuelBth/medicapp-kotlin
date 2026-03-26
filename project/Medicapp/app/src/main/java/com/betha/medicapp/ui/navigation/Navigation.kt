@@ -30,18 +30,21 @@ fun AppNavigation(viewModel: AuthViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
-    // Manejar navegación tras login exitoso - PRIMERO (antes de ClearMessage)
-    LaunchedEffect(uiState.isLoggedIn) {
-        if (uiState.isLoggedIn && uiState.userName != null) {
-            // Guardar datos antes de limpiar
+    // Mostrar Toast cuando hay mensaje
+    LaunchedEffect(uiState.message) {
+        uiState.message?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            viewModel.onEvent(AuthEvent.ClearMessage)
+        }
+    }
+
+    // Navegar solo cuando isLoggedIn cambia a true (no cuando es false)
+    LaunchedEffect(uiState.isLoggedIn, uiState.doctor, uiState.idNumber, uiState.userName) {
+        if (uiState.isLoggedIn && uiState.userName != null && uiState.idNumber > 0) {
             val isDoctor = uiState.doctor == true
             val idNumber = uiState.idNumber
-            val userName = uiState.userName
+            val userName = uiState.userName ?: ""
             
-            // Limpiar estado PRIMERO
-            viewModel.onEvent(AuthEvent.ClearMessage)
-            
-            // Luego navegar
             val intent = if (isDoctor) {
                 Intent(context, DoctorActivity::class.java).apply {
                     putExtra("doctorId", idNumber)
@@ -54,14 +57,7 @@ fun AppNavigation(viewModel: AuthViewModel = viewModel()) {
                 }
             }
             context.startActivity(intent)
-        }
-    }
-
-    // Mostrar Toast cuando hay mensaje del servidor - DESPUÉS
-    LaunchedEffect(uiState.message) {
-        if (uiState.message != null) {
-            Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
-            viewModel.onEvent(AuthEvent.ClearMessage)
+            // No reseteamos el estado aquí para que la Activity pueda usarlo
         }
     }
 
@@ -69,9 +65,6 @@ fun AppNavigation(viewModel: AuthViewModel = viewModel()) {
         is Screen.Login -> {
             LoginScreen(
                 onNavigateToRegister = { currentScreen = Screen.Register },
-                onLoginSuccess = { 
-                    // La navegación se maneja en el LaunchedEffect de arriba
-                },
                 viewModel = viewModel
             )
         }
