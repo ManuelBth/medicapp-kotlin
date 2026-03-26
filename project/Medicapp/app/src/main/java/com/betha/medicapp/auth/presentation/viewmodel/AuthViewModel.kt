@@ -29,7 +29,7 @@ sealed class AuthEvent {
 
 class AuthViewModel : ViewModel() {
 
-    private val client = RESTClient("http://0.0.0.0:8080")
+    private val client = RESTClient("http://192.168.80.22:8080")
     private val authService = AuthService(client)
 
     private val _uiState = MutableStateFlow(AuthUiState())
@@ -54,11 +54,11 @@ class AuthViewModel : ViewModel() {
                 onSuccess = { response ->
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        isLoggedIn = response.success,
+                        isLoggedIn = response.isSuccess,
                         userName = response.userName,
-                        isDoctor = response.doctor,
-                        message = response.message,
-                        isError = !response.success
+                        isDoctor = response.isDoctor,
+                        message = response.status,
+                        isError = !response.isSuccess
                     )
                 },
                 onFailure = { error ->
@@ -82,8 +82,8 @@ class AuthViewModel : ViewModel() {
                 onSuccess = { response ->
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        message = response.message,
-                        isError = !response.success
+                        message = response.status,
+                        isError = !response.isSuccess
                     )
                 },
                 onFailure = { error ->
@@ -106,8 +106,8 @@ class AuthViewModel : ViewModel() {
             result.fold(
                 onSuccess = { response ->
                     _uiState.value = AuthUiState(
-                        message = response.message,
-                        isError = !response.success
+                        message = response.status,
+                        isError = !response.isSuccess
                     )
                 },
                 onFailure = { error ->

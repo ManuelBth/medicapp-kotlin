@@ -21,7 +21,8 @@ import com.betha.medicapp.ui.theme.White
 fun HomeScreen(
     userName: String,
     isDoctor: Boolean,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onUserIdChange: (Int) -> Unit = {}
 ) {
     Box(
         modifier = Modifier

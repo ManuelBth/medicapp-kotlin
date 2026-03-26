@@ -24,12 +24,18 @@ class AuthService(private val client: RESTClient) {
             val response = client.wait()
 
             val json = gson.fromJson(response, JsonObject::class.java)
-            val success = json.get("success")?.asBoolean ?: false
-            val message = json.get("message")?.asString ?: ""
-            val userName = json.get("userName")?.asString
-            val doctor = json.get("doctor")?.asBoolean
+            val status = json.get("status")?.asString ?: ""
+            
+            // El login es exitoso si el status no está vacío
+            val isSuccess = status.isNotEmpty()
+            
+            // Determinar si es doctor basándose en el status
+            val isDoctor = status.contains("Doctor", ignoreCase = true)
+            
+            // Extraer userName si está disponible, si no usar un valor por defecto
+            val userName = json.get("userName")?.asString ?: "Usuario"
 
-            Result.success(AuthResponse(message, success, userName, doctor))
+            Result.success(AuthResponse(status, isSuccess, userName, isDoctor))
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -48,10 +54,12 @@ class AuthService(private val client: RESTClient) {
             val response = client.wait()
 
             val json = gson.fromJson(response, JsonObject::class.java)
-            val success = json.get("success")?.asBoolean ?: false
-            val message = json.get("message")?.asString ?: ""
+            val status = json.get("status")?.asString ?: ""
+            
+            // El registro es exitoso si contiene "registered"
+            val isSuccess = status.contains("registered", ignoreCase = true)
 
-            Result.success(AuthResponse(message, success))
+            Result.success(AuthResponse(status, isSuccess))
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -67,10 +75,12 @@ class AuthService(private val client: RESTClient) {
             val response = client.wait()
 
             val json = gson.fromJson(response, JsonObject::class.java)
-            val success = json.get("success")?.asBoolean ?: false
-            val message = json.get("message")?.asString ?: ""
+            val status = json.get("status")?.asString ?: ""
+            
+            // El logout es exitoso si el status no está vacío
+            val isSuccess = status.isNotEmpty()
 
-            Result.success(AuthResponse(message, success))
+            Result.success(AuthResponse(status, isSuccess))
         } catch (e: Exception) {
             Result.failure(e)
         }

@@ -49,13 +49,13 @@ fun RegisterScreen(
     var isDoctor by remember { mutableStateOf(false) }
 
     LaunchedEffect(uiState.message) {
-        if (uiState.message != null && !uiState.isError) {
+        if (uiState.message != null) {
             Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
             viewModel.onEvent(AuthEvent.ClearMessage)
-            onRegisterSuccess()
-        } else if (uiState.message != null && uiState.isError) {
-            Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
-            viewModel.onEvent(AuthEvent.ClearMessage)
+            // Solo navegar si no hay error (éxito en registro)
+            if (!uiState.isError) {
+                onRegisterSuccess()
+            }
         }
     }
 
