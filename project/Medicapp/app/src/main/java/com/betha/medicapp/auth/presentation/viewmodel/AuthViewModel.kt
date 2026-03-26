@@ -5,7 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.betha.medicapp.auth.presentation.dto.LoginRequest
 import com.betha.medicapp.auth.presentation.dto.RegisterRequest
 import com.betha.medicapp.auth.service.AuthService
-import com.betha.medicapp.auth.service.SessionManager
+import com.betha.medicapp.common.Constants
+import com.betha.medicapp.common.preferences.SessionManager
 import com.betha.medicapp.common.network.RESTClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,7 +32,7 @@ sealed class AuthEvent {
 
 class AuthViewModel : ViewModel() {
 
-    private val client = RESTClient("http://192.168.80.22:8080")
+    private val client = RESTClient(Constants.SERVER_URL)
     private val authService = AuthService(client)
     private var sessionManager: SessionManager? = null
 

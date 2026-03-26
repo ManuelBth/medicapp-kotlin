@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.betha.medicapp.auth.presentation.viewmodel.AuthEvent
 import com.betha.medicapp.auth.presentation.viewmodel.AuthViewModel
-import com.betha.medicapp.auth.service.SessionManager
+import com.betha.medicapp.common.preferences.SessionManager
 import com.betha.medicapp.auth.ui.screens.login.LoginScreen
 import com.betha.medicapp.auth.ui.screens.register.RegisterScreen
 import com.betha.medicapp.doctor.DoctorActivity

@@ -1,4 +1,4 @@
-package com.betha.medicapp.auth.service
+package com.betha.medicapp.common.preferences
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.betha.medicapp.doctor.presentation.dto.Appointment
 import com.betha.medicapp.doctor.service.DoctorService
+import com.betha.medicapp.common.Constants
+import com.betha.medicapp.common.preferences.SessionManager
 import com.betha.medicapp.common.network.RESTClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,11 +26,18 @@ sealed class DoctorEvent {
 
 class DoctorViewModel : ViewModel() {
 
-    private val client = RESTClient("http://192.168.80.22:8080")
+    private val client = RESTClient(Constants.SERVER_URL)
     private val doctorService = DoctorService(client)
+    private var sessionManager: SessionManager? = null
 
     private val _uiState = MutableStateFlow(DoctorUiState())
     val uiState: StateFlow<DoctorUiState> = _uiState.asStateFlow()
+
+    fun setSessionManager(manager: SessionManager) {
+        this.sessionManager = manager
+    }
+
+    fun getSessionManager(): SessionManager? = sessionManager
 
     fun onEvent(event: DoctorEvent) {
         when (event) {
@@ -59,6 +68,10 @@ class DoctorViewModel : ViewModel() {
                 }
             )
         }
+    }
+
+    fun logout() {
+        sessionManager?.clearSession()
     }
 
     private fun clearMessage() {
